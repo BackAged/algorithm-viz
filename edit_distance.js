@@ -19,9 +19,9 @@ function findMinOperation(p, q, pn, qn, visited) {
         return [pn - qn, makeANode(pn, qn, "Crap",[]) ];
     }
 
-    // if (visited[pn][qn] != 105) {
-    //     [visited[pn][qn], makeANode(0, 0, null,[])];
-    // }
+    if (visited[pn][qn] != 105) {
+        [visited[pn][qn], makeANode(0, 0, null,[])];
+    }
 
     const node = makeANode(pn, qn, null, []);
     if (p[pn] != q[qn]) {
