@@ -23,8 +23,9 @@
 
         .link {
             fill: none;
-            stroke: #ccc;
-            stroke-width: 2px;
+            /*stroke: steelblue;*/
+            opacity: 0.4;
+            stroke-width: 2.5px;
         }
     </style>
 
@@ -34,11 +35,19 @@
     <div align="center">
         <h2>Edit Distance Problem Visualization</h2>
         <a href="https://en.wikipedia.org/wiki/Edit_distance">Edit Distance Problem Description Link</a>
+        <p>
+            <b>red</b> color means <b>insertion</b> operation<br>
+            <b>blue</b> color means <b>remove</b> operation<br>
+            <b>green</b> color means <b>replace</b> operation<br>
+            <br>yellow</b> color means <b>same character no operation</b><br>
+            <br>recursion from string's last position</br>
+        </p>
         <h2 id="ans"></h2>
         <input type="text" id="string1" name="strin1">
         <input type="text" id="string2" name="strin2">
         <input type="submit" id="submit">
     </div>
+
 
     <!-- load the d3.js library -->
     <script src="https://d3js.org/d3.v3.min.js"></script>
@@ -47,7 +56,6 @@
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 
     <script>
-
         $('#submit').click(function () {
             const string1 = $("#string1").val();
             const string2 = $("#string2").val();
@@ -62,11 +70,30 @@
                 const treeData = [t];
                 $('svg').remove();
                 updateView(treeData);
-                $("#ans").html(ans);
+                $("#ans").html(`minimum operation needed: ${ans}`);
             }
         })
 
 
+        function linkColor(linkCode) {
+            switch (linkCode) {
+                case INSERT:
+                    return '#FB2807';//blue
+                    break;
+                case REPLACE:
+                    return '#0A9319';//orange
+                    break;
+                case REMOVE:
+                    return '#0A3C93';//red
+                    break;
+                case "YELLOW":
+                    return '#FFD700'
+                    break
+                default:
+                    return '#050505';//generic blue
+                    break;
+            }
+        }
 
         function updateView(treeData) {
             // ************** Generate the tree diagram	 *****************
@@ -120,7 +147,12 @@
 
                 nodeEnter.append("circle")
                     .attr("r", 10)
-                    .style("fill", "#fff");
+                    .style("fill", function (d) {
+                        if (d.name === "*") {
+                            return linkColor("BLACK");
+                        }
+                        return linkColor(d.colorCode);
+                    });
 
                 nodeEnter.append("text")
                     .attr("y", function (d) {
@@ -138,7 +170,23 @@
                 // Enter the links.
                 link.enter().insert("path", "g")
                     .attr("class", "link")
-                    .attr("d", diagonal);
+                    .attr("d", diagonal)
+                    .attr("stroke", function (d) {
+                        return linkColor(d.target.colorCode);
+                    });
+                // link.enter().append("text")
+                //     .attr("font-family", "Arial, Helvetica, sans-serif")
+                //     .attr("fill", "Black")
+                //     .style("font", "normal 12px Arial")
+                //     .attr("transform", function (d) {
+                //         return `translate( ${(d.source.x + d.target.x)/2},${(d.source.y + d.target.y)/2})`
+                //     })
+                //     .attr("dy", ".35em")
+                //     .attr("text-anchor", "middle")
+                //     .text(function (d) {
+                //         console.log(d.tar)
+                //         return d.source.value;
+                //     });
 
             }
         }
