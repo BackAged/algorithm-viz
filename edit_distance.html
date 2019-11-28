@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>Tree Example</title>
+
+    <style>
+        .node {
+            cursor: pointer;
+        }
+
+        .node circle {
+            fill: #fff;
+            stroke: steelblue;
+            stroke-width: 3px;
+        }
+
+        .node text {
+            font: 12px sans-serif;
+        }
+
+        .link {
+            fill: none;
+            stroke: #ccc;
+            stroke-width: 2px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div align="center">
+        <h2>Edit Distance Problem Visualization</h2>
+        <h2 id="ans"></h2>
+        <input type="text" id="string1" name="strin1">
+        <input type="text" id="string2" name="strin2">
+        <input type="submit" id="submit">
+    </div>
+
+    <!-- load the d3.js library -->
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <script src="./edit_distance.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
+    <script>
+
+        $('#submit').click(function () {
+            const string1 = $("#string1").val();
+            const string2 = $("#string2").val();
+            const string1Len = string1.length;
+            const string2Len = string2.length;
+
+            if (string1Len > 10 || string2Len > 10) {
+                alert("not that big bro");
+            } else {
+                const [ans, t] = generateTree(string1, string2, string1Len, string2Len);
+                console.log(ans, t);
+                const treeData = [t];
+                $('svg').remove();
+                updateView(treeData);
+                $("#ans").html(ans);
+            }
+        })
+
+
+
+        function updateView(treeData) {
+            // ************** Generate the tree diagram	 *****************
+            var margin = { top: 40, right: 120, bottom: 20, left: 120 },
+                width = 1960 - margin.right - margin.left,
+                height = 1500 - margin.top - margin.bottom;
+
+            var i = 0;
+            // ************** Generate the tree diagram	 *****************
+            var margin = { top: 40, right: 120, bottom: 20, left: 120 },
+                width = 1960 - margin.right - margin.left,
+                height = 1500 - margin.top - margin.bottom;
+
+            var i = 0;
+
+            var tree = d3.layout.tree()
+                .size([height, width]);
+
+            var diagonal = d3.svg.diagonal()
+                .projection(function (d) { return [d.x, d.y]; });
+
+            var svg = d3.select("body").append("svg")
+                .attr("width", width + margin.right + margin.left)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            root = treeData[0];
+
+            update(root);
+
+            function update(source) {
+
+                // Compute the new tree layout.
+                var nodes = tree.nodes(root).reverse(),
+                    links = tree.links(nodes);
+
+                // Normalize for fixed-depth.
+                nodes.forEach(function (d) { d.y = d.depth * 100; });
+
+                // Declare the nodes…
+                var node = svg.selectAll("g.node")
+                    .data(nodes, function (d) { return d.id || (d.id = ++i); });
+
+                // Enter the nodes.
+                var nodeEnter = node.enter().append("g")
+                    .attr("class", "node")
+                    .attr("transform", function (d) {
+                        return "translate(" + d.x + "," + d.y + ")";
+                    });
+
+                nodeEnter.append("circle")
+                    .attr("r", 10)
+                    .style("fill", "#fff");
+
+                nodeEnter.append("text")
+                    .attr("y", function (d) {
+                        return d.children || d._children ? -18 : 18;
+                    })
+                    .attr("dy", ".35em")
+                    .attr("text-anchor", "middle")
+                    .text(function (d) { return d.name; })
+                    .style("fill-opacity", 1);
+
+                // Declare the links…
+                var link = svg.selectAll("path.link")
+                    .data(links, function (d) { return d.target.id; });
+
+                // Enter the links.
+                link.enter().insert("path", "g")
+                    .attr("class", "link")
+                    .attr("d", diagonal);
+
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>
