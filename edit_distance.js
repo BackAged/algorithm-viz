@@ -1,22 +1,24 @@
 const INSERT = "INSERT";
 const REMOVE = "REMOVE";
 const REPLACE = "REPLACE";
+const YELLOW = "YELLOW";
+const BLACk = "BLACK";
 
-function makeANode (pn, qn, parent, children, colorCode) {
+function makeANode (p, q, pn, qn, parent, children, colorCode) {
     return {
         colorCode,
-        name: makeParent(pn,qn),
+        name: makeParent(p,q, pn,qn),
         parent: parent,
         children: children
     }
 }
 
-function makeParent(pn, qn) {
-    return `pn=${pn}, qn=${qn}`;
+function makeParent(p, q, pn, qn) {
+    return `pn(${pn})=${p[pn] ? p[pn] : ""}, qn(${qn})=${q[qn] ? q[qn]: ""}`;
 }
 
 function findMinOperation(p, q, pn, qn, visited, state) {
-    const node = makeANode(pn, qn, null, [], state);
+    const node = makeANode(p, q, pn, qn, null, [], state);
 
     if (pn < 0 && qn < 0) {
         return [0, {...node, name:'*'}];
@@ -44,7 +46,7 @@ function findMinOperation(p, q, pn, qn, visited, state) {
         node.children.push(removeeo);
         visited[pn][qn] = Math.min(Math.min(1+ insert, 1+replace), 1+ removee);
     } else {
-        const [pass, passO] = findMinOperation(p, q, pn - 1, qn - 1, visited, "YELLOW");
+        const [pass, passO] = findMinOperation(p, q, pn - 1, qn - 1, visited, YELLOW);
         visited[pn][qn] = pass;
         node.children.push(passO);
     }
@@ -60,6 +62,6 @@ function generateTree (p, q, pn, qn) {
             visited[i][j] = MAX;
         }
     }
-    return findMinOperation(p, q, pn-1, qn-1, visited, "BLACK");
+    return findMinOperation(p, q, pn-1, qn-1, visited, BLACk);
 }
 

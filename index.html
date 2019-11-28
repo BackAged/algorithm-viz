@@ -43,8 +43,8 @@
             <br>recursion from string's last position</br>
         </p>
         <h2 id="ans"></h2>
-        <input type="text" id="string1" name="strin1">
-        <input type="text" id="string2" name="strin2">
+        <label>p: </label><input type="text" id="string1" name="strin1">
+        <label>q: </label><input type="text" id="string2" name="strin2">
         <input type="submit" id="submit">
     </div>
 
@@ -174,20 +174,6 @@
                     .attr("stroke", function (d) {
                         return linkColor(d.target.colorCode);
                     });
-                // link.enter().append("text")
-                //     .attr("font-family", "Arial, Helvetica, sans-serif")
-                //     .attr("fill", "Black")
-                //     .style("font", "normal 12px Arial")
-                //     .attr("transform", function (d) {
-                //         return `translate( ${(d.source.x + d.target.x)/2},${(d.source.y + d.target.y)/2})`
-                //     })
-                //     .attr("dy", ".35em")
-                //     .attr("text-anchor", "middle")
-                //     .text(function (d) {
-                //         console.log(d.tar)
-                //         return d.source.value;
-                //     });
-
             }
         }
 
