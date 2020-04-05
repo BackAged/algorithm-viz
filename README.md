@@ -1,3 +1,3 @@
 # algorithm-viz
 
-### It visualizes the "Edit Distance" classical problem recursive workflow
+### It visualizes the  classical "Edit Distance" problem recursive workflow
